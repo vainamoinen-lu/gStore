@@ -47,6 +47,8 @@ private:
 	bool SwapOut();
 	bool UpdateTime(unsigned _key, bool HasLock = false);
 
+	// bool PreLoad();
+	void PreLoad();
 	void RemoveFromLRUQueue(unsigned _key);
 	
 	mutex CacheLock;

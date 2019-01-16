@@ -24,6 +24,7 @@ IVArray::IVArray()
 	MAX_CACHE_SIZE = 0;
 	cache_head = new IVEntry;
 	cache_tail_id = -1;
+	PreLoad();
 }
 
 IVArray::~IVArray()
@@ -123,12 +124,61 @@ IVArray::IVArray(string _dir_path, string _filename, string mode, unsigned long 
 			}	
 		}
 		//TODO PreLoad
-//		PreLoad();
+		PreLoad();
 
 	}
 //	cout << _filename << " Done." << endl;
 }
+void
+IVArray::PreLoad()
+{
+        static int counter=0;
+        long t= Util::get_cur_time();
+        char *_str=NULL;
+        unsigned _len;
+        for(unsigned i = 0; i < CurEntryNum; i++)
+                {
+                        if (array[i].inCache())
+                                continue;
+                        unsigned store = array[i].getStore();
+                        if(store==0)    {counter++;continue;}
+                        if(!BM->ReadValue(store, _str, _len))
+                                        break;
+                        if(!VList::isLongList(_len))
+                                AddInCache(i, _str, _len);
+                        _str=NULL;
+         }
+        printf("Time Spend in Preload is %ld \ncounter= %d CurEntry=%u \n" , Util::get_cur_time()-t,counter,CurEntryNum);
+}
+/*
+bool
+IVArray::PreLoad()
+{
+	if (array == NULL)
+		return false;
 
+	for(unsigned i = 0; i < CurEntryNum; i++)
+	{
+		if (!array[i].isUsed())
+			continue;
+
+		unsigned store = array[i].getStore();
+		char *str = NULL;
+		unsigned len = 0;
+
+		if (!BM->ReadValue(store, str, len))
+			return false;
+		if (CurCacheSize + len > (MAX_CACHE_SIZE >> 1))
+			break;
+		
+		AddInCache(i, str, len);
+		
+		delete [] str;
+	}
+
+	return true;
+}
+*/
 bool
 IVArray::save()
 {

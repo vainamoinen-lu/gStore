@@ -36,15 +36,17 @@ done
 gquery(){
 for i in 0 1 2 3 4 5 6 7
 do
-	${op[1]} ${db[0]} ${path}${db[0]}"/"${db[0]}${bbug_sql[$i]}".sql" > "1.txt" 
+	echo ${db[0]}${bbug_sql[$i]}
+	${op[1]} ${db[0]} ${path}${db[0]}"/"${db[0]}${bbug_sql[$i]}".sql" > "1.txt"
 	if [ ${bbug_ans[$i]} -ne -1 ]
 	then
 		ans=$(grep "There has answer" 1.txt)
+		echo $ans
 		if [ ${ans:18:${#ans}-18} -ne ${bbug_ans[$i]} ]
 		then 
-			echo -e "\033[43;35m query ${bbug_sql[$i]}.sql in ${db[0]}.db has errors \033[0m"
-			"rm" "1.txt"
-			exit
+			correctness=0
+			pass=0
+			echo ${db[0]}${bbug_sql[$i]}
 		fi
 	fi
 	"rm" "1.txt"
@@ -52,39 +54,42 @@ done
 
 for i in 0 1 2 3 4 5 6 7 8 9 10
 do
+	echo ${db[1]}${lubm_sql[$i]}
         ${op[1]} ${db[1]} ${path}${db[1]}"/"${db[1]}${lubm_sql[$i]}".sql" > "1.txt"
 	ans=$(grep "There has answer" 1.txt)
 	if [ ${ans:18:${#ans}-18} -ne ${lubm_ans[$i]} ]
 	then
-		echo -e "\033[43;35m query ${lubm_sql[$i]}.sql in ${db[1]}.db has errors \033[0m"
-		"rm" "1.txt"
-		exit
+		correctness=0
+		pass=0
+		echo ${db[1]}${lubm_sql[$i]}
 	fi
 	"rm" "1.txt"
 done
 
 for i in 0 1 2 3
 do
+	echo ${db[2]}${num_sql[$i]}
         ${op[1]} ${db[2]} ${path}${db[2]}"/"${db[2]}${num_sql[$i]}".sql" > "1.txt"
         ans=$(grep "There has answer" 1.txt)
         if [ ${ans:18:${#ans}-18} -ne ${num_ans[$i]} ]
         then
-		echo -e "\033[43;35m query ${num_sql[$i]}.sql in ${db[2]}.db has errors \033[0m"
-		"rm" "1.txt"
-		exit
+                correctness=0
+		pass=0
+		echo ${db[2]}${num_sql[$i]}
         fi
         "rm" "1.txt"
 done
 
 for i in 0 1 2 3 4 5 6 7 8 9 10
 do
+	echo ${db[3]}${small_sql[$i]}
         ${op[1]} ${db[3]} ${path}${db[3]}"/"${db[3]}${small_sql[$i]}".sql" > "1.txt"
         ans=$(grep "There has answer" 1.txt)
         if [ ${ans:18:${#ans}-18} -ne ${small_ans[$i]} ]
         then
-		echo -e "\033[43;35m query ${small_sql[$i]}.sql in ${db[3]}.db has errors \033[0m"
-		"rm" "1.txt"
-		exit
+                correctness=0
+		pass=0
+		echo ${db[3]}${small_sql[$i]}
         fi
         "rm" "1.txt"
 
